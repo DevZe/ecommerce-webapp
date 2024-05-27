@@ -49,15 +49,15 @@ app.baseURL = 'http://localhost/'
 
 #--------------------------------------------------------------------
 
-# database.default.hostname = localhost
+database.default.hostname = localhost
 
-# database.default.database = ci4
+database.default.database =  ecommerce-wa-db
 
-# database.default.username = root
+database.default.username = root
 
-# database.default.password = root
+database.default.password = 
 
-# database.default.DBDriver = MySQLi
+database.default.DBDriver = MySQLi
 
 # database.default.DBPrefix =
 

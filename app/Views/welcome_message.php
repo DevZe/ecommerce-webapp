@@ -1,8 +1,7 @@
+
 <?= $this->extend('layouts/layout') ?>
 <?= $this->section('content') ?>
-<!-- HEADER: MENU + HEROE SECTION -->
-
-
+<link href="assets/css/welcome.css" rel="stylesheet">
 <!-- CONTENT -->
 
 
@@ -14,13 +13,14 @@
             <p id="demo" style="font-size:30px"></p>
         </div>
         <div class="bottomleft">
-            <p>A picture by <a href="https://www.foodiesfeed.com/author/ai-generated/"> Midjourney</a></p>
+           
+            <a href="https://www.freepik.com/free-photo/delicious-burger-with-many-ingredients-isolated-white-background-tasty-cheeseburger-splash-sauce_40582953.htm#query=burger&position=1&from_view=keyword&track=sph&uuid=e83f3071-19ee-4beb-836f-6e6cff86802a">Image by svstudioart</a> on Freepik
         </div>
     </div>
 
 
 
-<!-- FOOTER: DEBUG INFO + COPYRIGHTS -->
+<!-- FOOTER: COPYRIGHTS -->
 
 <footer>
     <!-- <div class="environment">

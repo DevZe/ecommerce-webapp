@@ -10,10 +10,7 @@ class Home extends BaseController
         return view('welcome_message');
     }
 
-   public function getProduct($product)
-   {
-        return view('products/productDetails', ['product'=> $product]);
-   }
+ 
 
    public function store()
    {

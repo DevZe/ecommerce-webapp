@@ -9,5 +9,6 @@ class ProductModel extends Model
     protected $primaryKey = "id";
     // protected $returnType = "array";
     //     protected $useSoftDeletes = true;
-    protected $allowedFields = ['name','description','price'];
+    
+    protected $allowedFields = ['title','category_id','description','price','image_url'];
 }

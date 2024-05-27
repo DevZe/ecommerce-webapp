@@ -1,108 +1,170 @@
 <?= $this->extend('layouts/layout') ?>
 <?= $this->section('content') ?>
-<style>
-* {box-sizing: border-box;}
+<link href="/assets/css/store.css" rel="stylesheet">
+<section>
 
-.container {
-  position: relative;
-  padding: 0;
-  margin: 0;
-}
-
-.image {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.overlay {
-  position: absolute; 
-  bottom: 0; 
-  background: rgb(0, 0, 0);
-  background: rgba(0, 0, 0, 0.5); /* Black see-through */
-  color: #f1f1f1; 
-  width: 100%;
-  transition: .5s ease;
-  opacity:0;
-  color: white;
-  font-size: 20px;
-  padding: 20px;
-  text-align: center;
-}
-
-.container:hover .overlay {
-  opacity: 1;
-}
-</style>
-<div class="row"> 
-  <div class="column">
-    <div class="container">
-        <img src="/img/burger1.jpg" style="width:100%" class="image">
-        <div class="overlay">R44.90</div>
-    </div>
-    <div class="container">
-        <img src="/img/burger and chips.jpg" alt="Photo by Engin Akyurt: https://www.pexels.com/photo/hamburger-beside-fries-2271107/" style="width:100%">
-        <div class="overlay">R144.50</div>    
-    </div>
-    <div class="container">
-        <img src="/img/burger2.jpg" style="width:100%">
-        <div class="overlay">R244.90</div>    
-    </div>
-    <img src="/img/burger6.jpg" style="width:100%">
-    <img src="/img/burger3.jpg" style="width:100%">
-    <img ssrc="/img/burger4.jpg" style="width:100%">
-    <img src="/img/burger5.jpg" style="width:100%">
-  
-  </div>
-  <div class="column">
-    <img src="/img/burger7.jpg" style="width:100%">
-    <img src="/img/burger5.jpg" style="width:100%">
-    <img src="/img/burger and chips.jpg" alt="Photo by Engin Akyurt: https://www.pexels.com/photo/hamburger-beside-fries-2271107/" style="width:100%">
-    <img src="/img/burger2.jpg" style="width:100%">
-    <img src="/img/burger3.jpg" style="width:100%">
-    <img ssrc="/img/burger4.jpg" style="width:100%">
-  
-    <img src="/img/burger6.jpg" style="width:100%">
-</div>
-  <div class="column">
-   
-    <img src="/img/burger3.jpg" style="width:100%"  class="image">
+<div class="tab">
+  <button class="tablinks" onclick="openCategory(event, 'Burger')" id="defaultOpen" style="border-radius: 15px 0px 0px 0px;">
+    <div class="container" >
+      <img src="/img/burger6.jpg" >
+      <img src="/img/burger1.jpg" >
         
-    <div class="container">
-        <img src="/img/burger2.jpg" style="width:100%">
-        <div class="overlay">R154.50</div>    
+        <img src="/img/burger3.jpg" >
+        <div class="overlay">Burger</div>    
     </div>
-    <div class="container">
-        <img src="/img/burger and chips.jpg" alt="Photo by Engin Akyurt: https://www.pexels.com/photo/hamburger-beside-fries-2271107/" style="width:100%">
-        <div class="overlay">R144.90</div>    
+  </button>
+  <button class="tablinks" onclick="openCategory(event, 'Drinks')">
+    <div class="container"> 
+      <img src="/img/burger4.jpg" >
+      <img src="/img/burger5.jpg" >
+      <img src="/img/burger6.jpg" >
+      <div class="overlay">Drinks</div>    
     </div>
-    <div class="container">
-        <img src="/img/burger1.jpg" style="width:100%" class="image">
-        <div class="overlay">R194.90</div>
+  </button>
+  <button class="tablinks" onclick="openCategory(event, 'Dessert')">
+    <div class="container"> 
+      <img src="/img/burger7.jpg">
+      <img src="/img/burger1.jpg">
+      <img src="/img/burger3.jpg">
+      <div class="overlay">Dessert</div>    
     </div>
-    <img src="/img/burger7.jpg" style="width:100%"
-    <img ssrc="/img/burger4.jpg" style="width:100%">
-    <img src="/img/burger5.jpg" style="width:100%">
- </div>
-  <div class="column">
-    <img ssrc="/img/burger4.jpg" style="width:100%">
+  </button>
+  <button class="tablinks" onclick="openCategory(event, 'Specials')" style="border-radius: 0px 0px 0px 15px;">
     <div class="container">
-        <img src="/img/burger2.jpg" style="width:100%">
-        <div class="overlay">R154.90</div>    
+      <img src="/img/burger4.jpg" >
+      <img src="/img/burger2.jpg" >
+      <div class="overlay">Specials</div>    
     </div>
-    <div class="container">
-        <img src="/img/burger1.jpg" style="width:100%" class="image">
-        <div class="overlay">R104.90</div>
-    </div>
-    <img src="/img/burger3.jpg" style="width:100%">
-   
-    <img src="/img/burger5.jpg" style="width:100%">
-    <img src="/img/burger6.jpg" style="width:100%">
-    <div class="container">
-        <img src="/img/burger and chips.jpg" alt="Photo by Engin Akyurt: https://www.pexels.com/photo/hamburger-beside-fries-2271107/" style="width:100%">
-        <div class="overlay">R114.90</div>    
-    </div>
+  </button>
+</div>
+
+<div id="Burger" class="tabcontent">
+
+  <div class="row"> 
+    <?php foreach ($products as $key => $value): ?>
+        <?php if ($value['category_id'] == 1): ?>
+          <div class="column">
+            <div class="card">
+              <img src="/img/burger1.jpg" alt="" style="width:100%">
+              <h1><?= $value['title'] ?></h1>
+              <p class="price">R <?= $value['price'] ?></p>
+              <p><?= $value['description'] ?></p>
+              <p><button>Add to Cart</button></p>
+            </div>
+          </div>
+          
+      <?php endif; ?>
+    <?php endforeach; ?>
   </div>
 </div>
 
+<div id="Drinks" class="tabcontent">
+  <div class="row"> 
+    <?php foreach ($products as $key => $value): ?>
+        <?php if ($value['category_id'] == 2): ?>
+          <div class="column">
+            <div class="card">
+              <img src="/img/burger1.jpg" alt="" style="width:100%">
+              <h1><?= $value['title'] ?></h1>
+              <p class="price">R <?= $value['price'] ?></p>
+              <p><?= $value['description'] ?></p>
+              <p><button>Add to Cart</button></p>
+            </div>
+          </div>
+          
+      <?php endif; ?>
+    <?php endforeach; ?>
+  </div>
+   
+</div>
+
+<div id="Dessert" class="tabcontent">
+    <div class="row"> 
+      <?php foreach ($products as $key => $value): ?>
+          <?php if ($value['category_id'] == 3): ?>
+            <div class="column">
+              <div class="card">
+                <img src="/img/burger1.jpg" alt="" style="width:100%">
+                <h1><?= $value['title'] ?></h1>
+                <p class="price">R <?= $value['price'] ?></p>
+                <p><?= $value['description'] ?></p>
+                <p><button>Add to Cart</button></p>
+              </div>
+            </div>
+            
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </div>
+</div>
+
+<div id="Specials" class="tabcontent">
+  <div class="row"> 
+      <?php foreach ($products as $key => $value): ?>
+          <?php if ($value['category_id'] == 4): ?>
+            <div class="column">
+              <div class="card">
+                <img src="/img/burger1.jpg" alt="" style="width:100%">
+                <h1><?= $value['title'] ?></h1>
+                <p class="price">R <?= $value['price'] ?></p>
+                <p><?= $value['description'] ?></p>
+                <p><button>Add to Cart</button></p>
+              </div>
+            </div>
+            
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </div>
+</div>
+
+
+</section>
+
+
+<script>
+// When the user scrolls down 20px from the top of the document, slide down the navbar
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("navbar").style.top = "0";
+  } else {
+    document.getElementById("navbar").style.top = "-50px";
+  }
+}
+
+
+//Category Onclick function
+function openCategory(evt, categoryName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(categoryName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+
+
+//NavBar disappear on scroll
+var prevScrollpos = window.pageYOffset;
+window.onscroll = function() {
+var currentScrollPos = window.pageYOffset;
+  if (prevScrollpos > currentScrollPos) {
+    document.getElementById("navbar").style.top = "0";
+  } else {
+    document.getElementById("navbar").style.top = "-50px";
+  }
+  prevScrollpos = currentScrollPos;
+}
+
+
+</script>
 <?= $this->endSection() ?>
