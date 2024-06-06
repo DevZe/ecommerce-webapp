@@ -37,8 +37,9 @@
         <input type="file" class="form-control" value="<?= $editProduct['image_url'] ?>" name="image_url" id="stock-image">
       </div>
       <div class="col-auto">
-        <button type="submit" class="btn btn-primary mb-3">Add Stock </button>
+        <button type="submit" class="btn btn-primary mb-3">Update Stock </button>
       </div>
+
     </form>
   </div>
 </div>

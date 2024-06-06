@@ -10,16 +10,5 @@ class Home extends BaseController
         return view('welcome_message');
     }
 
- 
-
-   public function store()
-   {
-        return view('store');
-   }
-
-   public function createUser()
-   {
-        return view('auth/signup_profile');
-   }
 
 }

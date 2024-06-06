@@ -45,11 +45,15 @@
         <?php if ($value['category_id'] == 1): ?>
           <div class="column">
             <div class="card">
-              <img src="/img/burger1.jpg" alt="" style="width:100%">
-              <h1><?= $value['title'] ?></h1>
-              <p class="price">R <?= $value['price'] ?></p>
-              <p><?= $value['description'] ?></p>
-              <p><button>Add to Cart</button></p>
+              <form method="post" action="/admin/sales/new">
+                <input type="hidden" name="item_id" value="<?php echo $value['id'] ?>" />
+                <input type="hidden" name="customer_id" value="3" />
+                <img src="/img/burger1.jpg" alt="" style="width:100%">
+                <h1><?= $value['title'] ?></h1>
+                <p class="price">R <?= $value['price'] ?></p>
+                <p><?= $value['description'] ?></p>
+                <p><button>Add to Cart</button></p>
+              </form>
             </div>
           </div>
           
@@ -64,11 +68,14 @@
         <?php if ($value['category_id'] == 2): ?>
           <div class="column">
             <div class="card">
-              <img src="/img/burger1.jpg" alt="" style="width:100%">
-              <h1><?= $value['title'] ?></h1>
-              <p class="price">R <?= $value['price'] ?></p>
-              <p><?= $value['description'] ?></p>
-              <p><button>Add to Cart</button></p>
+              <form method="post" action="/admin/sales/new">
+                <input type="hidden" name="item_id" value="<?php echo $value['id'] ?>" />
+                <img src="/img/burger1.jpg" alt="" style="width:100%">
+                <h1><?= $value['title'] ?></h1>
+                <p class="price">R <?= $value['price'] ?></p>
+                <p><?= $value['description'] ?></p>
+                <p><button>Add to Cart</button></p>
+              </form>
             </div>
           </div>
           
@@ -84,11 +91,14 @@
           <?php if ($value['category_id'] == 3): ?>
             <div class="column">
               <div class="card">
-                <img src="/img/burger1.jpg" alt="" style="width:100%">
-                <h1><?= $value['title'] ?></h1>
-                <p class="price">R <?= $value['price'] ?></p>
-                <p><?= $value['description'] ?></p>
-                <p><button>Add to Cart</button></p>
+                <form method="post" action="/admin/sales/new">
+                  <input type="hidden" name="item_id" value="<?php echo $value['id'] ?>" />
+                  <img src="/img/burger1.jpg" alt="" style="width:100%">
+                  <h1><?= $value['title'] ?></h1>
+                  <p class="price">R <?= $value['price'] ?></p>
+                  <p><?= $value['description'] ?></p>
+                  <p><button>Add to Cart</button></p>
+                </form>
               </div>
             </div>
             
@@ -103,11 +113,14 @@
           <?php if ($value['category_id'] == 4): ?>
             <div class="column">
               <div class="card">
-                <img src="/img/burger1.jpg" alt="" style="width:100%">
-                <h1><?= $value['title'] ?></h1>
-                <p class="price">R <?= $value['price'] ?></p>
-                <p><?= $value['description'] ?></p>
-                <p><button>Add to Cart</button></p>
+                <form method="post" action="/admin/sales/new">
+                  <input type="hidden" name="item_id" value="<?php echo $value['id'] ?>" />
+                  <img src="/img/burger1.jpg" alt="" style="width:100%">
+                  <h1><?= $value['title'] ?></h1>
+                  <p class="price">R <?= $value['price'] ?></p>
+                  <p><?= $value['description'] ?></p>
+                  <p><button type="submit">Add to Cart</button></p>
+                </form>
               </div>
             </div>
             

@@ -5,14 +5,21 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\ProductModel as ProductModel;
 use App\Models\ProductCategoryModel as ProductCategoryModel;
+use App\Models\SaleModel as SaleModel;
+use CodeIgniter\I18n\Time;
+
 class ShopController extends BaseController
 {
 
     public function store()
     {
+        if(!session()->get('isLoggedIn'))
+        {
+            return redirect()->to('/');            
+        }
         return view('store',$this->getProducts());
     }
-  
+
     //Return all products to the producs view
     protected function getProducts(): array
     {
@@ -197,5 +204,112 @@ class ShopController extends BaseController
             $model->delete($id);
             return redirect()->to('/');
         }
+    }
+
+
+    /*****Sales Component Methods *****/
+
+    //Add a new sale tyo DB 
+    public function saveSale()
+    {
+        
+        try{
+          
+            if($this->request->getMethod() == 'POST'){
+
+                $model = new  SaleModel();
+                $datetime = Time::now('Africa/Johannesburg','en_US');  
+                $_POST['sales_date'] = $datetime;
+                $model->save($_POST);
+
+                if($model){
+                    $soldProductModel = new ProductModel();
+                    $soldProductDataResut = $soldProductModel->find($_POST['item_id']);
+                    
+                    $soldProductData = [
+                        'id'=> $soldProductDataResut['id'],
+                        'title' => $soldProductDataResut['title'],
+                        'price' => $soldProductDataResut['price'],
+                        'description' => $soldProductDataResut['description'],
+                        'image_url' => $soldProductDataResut['image_url'],
+                        'date' => date("Y-m-d H:i:s"),
+                        'error' => '',
+                    ];
+
+
+                }else{
+                    $soldProductData = [
+                        'error' => 'Error In the Order Sale Insert!',                       
+                    ];
+                }
+                return view('sales/saleDetails', ['sale' => $soldProductData]);
+            
+            }else{
+                echo 'Error: $Post Is Empty';
+            }
+        }catch(Exception $e){
+            echo json_encode('Error: ' . $e);      
+        }
+        
+    }
+
+    // Get All Sales
+
+    public function getAllSales()
+    {
+        $saleModel = new SaleModel();
+        $productModel = new ProductModel();
+        $products = $productModel->findAll();
+        $sales = $saleModel->findAll();
+
+        $salesArray = [];
+        $i=0;
+        foreach($products as $product)
+        {
+            foreach($sales as $soldProduct)
+            {
+              
+                if($product['id'] == $soldProduct['item_id'])
+                {
+                    $salesArray[$i]['sale_id'] = $soldProduct['id'];
+                    $salesArray[$i]['item_title'] = $product['title'];
+                    $salesArray[$i]['sale_date'] = $soldProduct['sales_date'];
+                    $salesArray[$i]['amount'] = $product['price'];
+                    $i++;
+                }
+               
+            }
+        }
+
+        
+        return view("sales/salesDisplay",['sales' => $salesArray]);
+    }
+
+
+    public function getSale($id)
+    {
+        $saleModel = new SaleModel();
+        $sale = $saleModel->find($id);
+        //$sale = $saleModel->where('id',$id);
+       
+        $saleArray = [];
+        
+        $productModel = new ProductModel();
+        //$product = $productModel->find($sale['item_id']);
+        
+        if($sale)
+        {
+            $product = $productModel->find($sale['item_id']);
+
+            $saleArray['title'] = $product['title'];
+            $saleArray['price'] = $product['price'];
+            $saleArray['date'] = $sale['sales_date'];
+            $saleArray['item_id'] = $sale['item_id'];
+            
+            return view("sales/saleDetails",['sale'=>$saleArray]);
+        }else{
+            echo 'No such!';
+        }
+
     }
 }

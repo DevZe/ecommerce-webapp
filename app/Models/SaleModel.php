@@ -8,5 +8,5 @@ class SaleModel extends Model
     protected $primaryKey = "id";
     // protected $returnType = "array";
     //     protected $useSoftDeletes = true;
-    protected $allowedFields = ['amount','customer_id'];
+    protected $allowedFields = ['item_id','customer_id','sales_date'];
 }
