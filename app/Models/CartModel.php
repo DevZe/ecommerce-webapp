@@ -2,11 +2,13 @@
 
 use CodeIgniter\Model;
 
-class SaleModel extends Model
+class CartModel extends Model
 {
-    protected $table = "sales";
+
+    protected $table = "cart";
     protected $primaryKey = "id";
     // protected $returnType = "array";
     //     protected $useSoftDeletes = true;
-    protected $allowedFields = ['item_id','customer_id','sales_date'];
+    
+    protected $allowedFields = ['CustomerID'];
 }

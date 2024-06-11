@@ -77,7 +77,7 @@ class UsersController extends BaseController
                 $model->save($newUser);
                 $session = session();
                 $session->setFlashdata('success','Successfully Signed Up');
-                return redirect()->to('/auth/login');
+                return redirect()->to('/');
             }
         }
 

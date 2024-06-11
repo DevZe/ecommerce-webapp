@@ -13,7 +13,11 @@ use CodeIgniter\Router\RouteCollection;
 
 
 $routes->match(['get','post'],'/', 'UsersController::index',['filter'=>'noauth']);
-$routes->get('logout','UsersController::logout');
+
+$routes->get('shopping_cart','Admin\ShopController::cart',['filter'=>'auth']);
+$routes->add('shopping_cart/update/(:any)/(:any)','Admin\ShopController::updateOrderItem/$1/$2',['filter'=>'auth']);
+$routes->add('shopping_cart/delete/(:any)','Admin\ShopController::deleteCartItem/$1',['filter'=>'auth']);
+$routes->add('checkout','Admin\ShopController::checkout',['filter'=>'auth']);
 $routes->add('register','UsersController::createUser',['filter'=>'noauth']);
 $routes->match(['get','post'],'auth/register','UsersController::register',['filter'=>'noauth']);
 
@@ -36,7 +40,7 @@ $routes->group('admin',function ($routes){
     $routes->add('products/category','Admin\ShopController::getProductsCategory/$1');
 
     //Sales Routes
-    $routes->post('sales/new','Admin\ShopController::saveSale');
+    $routes->post('cart/new','Admin\ShopController::addToCart');
     $routes->add('sales','Admin\ShopController::getAllSales');
     $routes->get('sales/(:any)','Admin\ShopController::getSale/$1');
 

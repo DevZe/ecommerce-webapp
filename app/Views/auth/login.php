@@ -51,6 +51,7 @@ img.avatar {
 
 .container {
   padding: 16px;
+
 }
 
 span.psw {
@@ -71,6 +72,7 @@ span.psw {
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   padding-top: 60px;
+
 }
 
 /* Modal Content/Box */
@@ -163,7 +165,7 @@ span.psw {
 <div id="loginModal" class="modal">
 
 
-  <form class="modal-content animate" method="post" action="/">
+  <form class="modal-content animate" style="border-radius: 15px;" method="post" action="/">
     <div class="imgcontainer">
       <img src="img_avatar2.png" alt="Avatar" class="avatar">
     </div>
@@ -202,7 +204,7 @@ span.psw {
       
     </div>
 
-    <div class="container" style="background-color:#f1f1f1;text-align:center;" >
+    <div class="container" style="background-color:#f1f1f1;text-align:center;border-radius:0px 0px 15px 15px" >
 
       <span class="btn-forgot-password" >Forgot <a href="#" >password?</a></span>
     </div>

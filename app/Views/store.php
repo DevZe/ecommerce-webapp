@@ -45,9 +45,9 @@
         <?php if ($value['category_id'] == 1): ?>
           <div class="column">
             <div class="card">
-              <form method="post" action="/admin/sales/new">
-                <input type="hidden" name="item_id" value="<?php echo $value['id'] ?>" />
-                <input type="hidden" name="customer_id" value="3" />
+              <form method="post" action="/admin/cart/new">
+                <input type="hidden" name="item_id" value="<?php echo $value['id'] ?>" />       
+                <input type="hidden" name="price" value="<?= $value['price'] ?>" />
                 <img src="/img/burger1.jpg" alt="" style="width:100%">
                 <h1><?= $value['title'] ?></h1>
                 <p class="price">R <?= $value['price'] ?></p>

@@ -6,6 +6,10 @@ use App\Controllers\BaseController;
 use App\Models\ProductModel as ProductModel;
 use App\Models\ProductCategoryModel as ProductCategoryModel;
 use App\Models\SaleModel as SaleModel;
+use App\Models\ShoppingCartModel as ShoppingCartModel;
+use App\Models\OrderEntityModel as OrderEntityModel;
+use App\Models\OrderItemModel as OrderItemModel;
+use App\Models\CartModel as CartModel;
 use CodeIgniter\I18n\Time;
 
 class ShopController extends BaseController
@@ -119,7 +123,7 @@ class ShopController extends BaseController
                 echo 'Error: $Post Is Empty';
             }
         }catch(Exception $e){
-            echo json_encode('Error: ' . $e);      
+            //echo json_encode('Error: ' . $e);      
         }
         
         //return view('store');
@@ -207,19 +211,226 @@ class ShopController extends BaseController
     }
 
 
-    /*****Sales Component Methods *****/
+    /*****Cart Component Methods *****/
 
-    //Add a new sale tyo DB 
-    public function saveSale()
+    //Add the Item to the cart
+    public function addToCart()
+    {
+        if($this->request->getMethod() == 'POST'){
+
+            //variables for caculating total price
+            $quantity =  1;
+            $price = $this->request->getVar('price');
+
+            $orderEntityModel = new OrderEntityModel();
+            
+             $orderEntity['customer_id'] = session()->get('id');
+             $orderEntity['totalAmount'] = $quantity * $price;//Calcuate the total
+            
+             //Check if the user already has an order
+             $existingOrderEntity = $orderEntityModel->where('customer_id',session()->get('id'))->first();
+             $orderEntityId = null;
+             if($existingOrderEntity)//If it exists update the order
+             {
+                //echo  $existingOrderEntity['id'];
+                //$orderEntityModel->update;
+                $castedOrderEntity = (object)$orderEntity;
+                $orderEntityModel->update($existingOrderEntity['id'], $castedOrderEntity);
+                $orderEntityId  = $existingOrderEntity['id'];
+            }else{$orderEntityModel->save($orderEntity);}//else save the new order
+             
+            //At this point there is only one order per user
+            //And the order has multiple items
+            if($orderEntityId == null || $orderEntityId == 0)
+            {
+                $onlyOrderEntity = $orderEntityModel->where('customer_Id', session()->get('id'))->first();
+                $orderEntityId = $onlyOrderEntity['id'];
+            }
+             
+            
+            
+           
+            //Add OrderItem record
+            $orderItemModel = new OrderItemModel();
+            $orderItem = array();
+            $orderItem['orderID'] = $orderEntityId;
+            $orderItem['productID'] = $this->request->getVar('item_id');
+            $orderItem['quantity'] = $quantity;
+            $orderItem['price'] = $price;
+
+            /************************************/
+            
+            $db      = \Config\Database::connect();
+            $builder = $db->table('orderitem');
+             $builder->where($orderItem);
+            $existingOrderItem = $builder->get()->getResult();
+            /************************************/
+
+            //$existingOrderItem = $orderItemModel->where($orderItem)->first();
+            if($existingOrderItem)
+            {
+                //echo $existingOrderItem[0]->quantity;
+                $orderItem['quantity'] = $existingOrderItem[0]->quantity+ 1;
+                $objectedOrderItem =(object)$orderItem;
+                $orderItemModel->update($existingOrderItem[0]->id,$objectedOrderItem);
+            }else{
+                //echo $orderItem['orderID'];
+               
+                $orderItemModel->save($orderItem);}
+
+            //Popate Cart table
+            $cartModel = new CartModel();
+            $cart = [];
+            $cart['CustomerID'] = session()->get('id');
+            $existingCart = $cartModel->where('id',session()->get('id') )->first();
+            if($existingCart)
+            {
+                $objectedCart = (object)$cart;
+                $cartModel->update($existingCart['id'], $objectedCart);
+            }else{ $cartModel->save($cart);}
+
+           
+
+            $this->cart();
+           //return view('payments/cart',['item'=>$product]);
+        }
+       
+        $error = 'No item found';
+        return view('payments/cart',['error'=>$error]);
+        
+    }
+
+ 
+    public function cart()
+    {
+
+            $model = new OrderEntityModel();
+            
+            //Get order entity from DB
+            $orderEntity = $model->where('customer_id',session()->get('id'))->first();  
+            $orderEntityId = $orderEntity['id'];  
+            if($orderEntity)           
+            {
+
+                $products=array();
+                if($orderEntityId && $orderEntityId !=''){
+
+                    $orderItemModel = new OrderItemModel();
+                    $orderItems = $orderItemModel->where('orderID',$orderEntityId)->findAll();
+                
+                    
+                    $error = [];
+                    //echo $orderItems[0]['id'];
+                
+                    //populate cart data with products
+                    //Cart id 
+                    //Cart product
+                    //Cart 
+                    //Total price
+                    $totalAmout = 0;
+                    if($orderItems && $orderItems!=null) {
+                       
+                        $productModel = new ProductModel();
+                        foreach($orderItems as $key => $orderItem) 
+                        {
+                            
+                            $products[$key] = $productModel->where('id',$orderItem['productID'])->first();
+                            $products[$key]['quantity'] = $orderItem['quantity'];
+                            $products[$key]['orderItemId'] = $orderItem['id'];
+                            $products[$key]['itemTotalPrice'] = $orderItem['quantity'] * $orderItem['price'];
+                            $error = '';
+                            
+                        }
+                        
+                        return view('payments/cart',['products'=>$products,'error'=>$error]);
+                    }
+
+            }
+        } 
+        $error = 'Empty Cart';
+        return view('payments/cart',['products'=>$products,'error'=>$error]);
+    }
+
+
+    private function getCartArray(): array
+    {
+        
+        $model = new OrderEntityModel();
+        
+        //Get order entity from DB
+        $orderEntity = $model->where('customer_id',session()->get('id'))->first();  
+        $orderEntityId = $orderEntity['id'];  
+        if($orderEntity)           
+        {
+
+            $products=array();
+            if($orderEntityId && $orderEntityId !='')
+            {
+
+                $orderItemModel = new OrderItemModel();
+                $orderItems = $orderItemModel->where('orderID',$orderEntityId)->findAll();
+            
+                
+                $error = [];
+                //echo $orderItems[0]['id'];
+            
+                //populate cart data with products
+                //Cart id 
+                //Cart product
+                //Cart 
+                //Total price
+
+                if($orderItems && $orderItems!=null) 
+                {
+                
+                    $productModel = new ProductModel();
+                    foreach($orderItems as $key => $orderItem) 
+                    {
+                        $products[$key] = $productModel->where('id',$orderItem['productID'])->first();
+                        $products[$key]['quantity'] = $orderItem['quantity'];
+                        $products[$key]['orderItemId'] = $orderItem['id'];
+                        $products[$key]['itemTotalPrice'] = $orderItem['quantity'] * $orderItem['price'];
+                        $error = '';
+                        
+                    }
+                    
+                    return ['products'=>$products,'error'=>$error];
+                }
+
+            }
+        }    
+        $error['error'] = 'Empty Cart';
+        return ['error'=>$error];
+    }
+    
+    //Shopping Cart Data
+    protected function getCustomerCartData(): array          
+    {
+        $model = new ShoppingCartModel();
+        $userId = session()->get('id');
+
+        if(isset($userId) && $userId != '')
+        {
+           // $cart = $model->where(key: 'customer_id', $userId)->first();
+        }
+        
+        return ['cart' => $cart];   
+    }
+
+    //Add Cart Record
+    public function saveCartItem()
     {
         
         try{
           
             if($this->request->getMethod() == 'POST'){
 
-                $model = new  SaleModel();
-                $datetime = Time::now('Africa/Johannesburg','en_US');  
-                $_POST['sales_date'] = $datetime;
+                $model = new  CartItemModel();
+                $cartItem = [];
+                $cartItem['item_id'] = $this->request->getVar('id');
+                $cartItem['customer_id'] = session()->get('id');
+                
+             
                 $model->save($_POST);
 
                 if($model){
@@ -253,63 +464,63 @@ class ShopController extends BaseController
         
     }
 
-    // Get All Sales
-
-    public function getAllSales()
+    public function updateOrderItem($orderItemId, $quantity)
     {
-        $saleModel = new SaleModel();
-        $productModel = new ProductModel();
-        $products = $productModel->findAll();
-        $sales = $saleModel->findAll();
-
-        $salesArray = [];
-        $i=0;
-        foreach($products as $product)
+        if($orderItemId && $quantity)
         {
-            foreach($sales as $soldProduct)
+            $model = new OrderItemModel();
+            $orderItemData = $model->where('id',$orderItemId)->first();
+
+            $updatedOrderItem = array();
+
+            
+
+            if($orderItemData)
             {
-              
-                if($product['id'] == $soldProduct['item_id'])
+                
+                if($quantity == 1)
                 {
-                    $salesArray[$i]['sale_id'] = $soldProduct['id'];
-                    $salesArray[$i]['item_title'] = $product['title'];
-                    $salesArray[$i]['sale_date'] = $soldProduct['sales_date'];
-                    $salesArray[$i]['amount'] = $product['price'];
-                    $i++;
+                    
+                    $updatedOrderItem['quantity'] = $orderItemData['quantity'] + 1;
+                    
+                }else if($quantity == -1)
+                {
+                   
+                    $updatedOrderItem['quantity'] = $orderItemData['quantity'] - 1;
+                    
                 }
                
+                //If the quantity is 0 then there is nothing in orderItem to update 
+                if($updatedOrderItem && $updatedOrderItem['quantity'] == 0)
+                {
+                    $model->delete($orderItemId);
+                }else{
+                    $model->update($orderItemId, (object)$updatedOrderItem);
+                }
+               
+                return view('payments/cart',$this->getCartArray());
             }
         }
-
-        
-        return view("sales/salesDisplay",['sales' => $salesArray]);
     }
 
 
-    public function getSale($id)
-    {
-        $saleModel = new SaleModel();
-        $sale = $saleModel->find($id);
-        //$sale = $saleModel->where('id',$id);
-       
-        $saleArray = [];
-        
-        $productModel = new ProductModel();
-        //$product = $productModel->find($sale['item_id']);
-        
-        if($sale)
+    public function deleteCartItem($id){
+        $model = new OrderItemModel();
+        $orderItemData = $model->where('id',$id)->first();
+
+        if($orderItemData)
         {
-            $product = $productModel->find($sale['item_id']);
-
-            $saleArray['title'] = $product['title'];
-            $saleArray['price'] = $product['price'];
-            $saleArray['date'] = $sale['sales_date'];
-            $saleArray['item_id'] = $sale['item_id'];
-            
-            return view("sales/saleDetails",['sale'=>$saleArray]);
-        }else{
-            echo 'No such!';
+            $model->delete($id);
+            return view('payments/cart',$this->getCartArray());
         }
+        $error['error'] = 'Error deleting item'; 
+        return view('payments/cart',[$error]);
+    }
 
+    //Get the cart details and user profile to populate the checkout form
+    public function checkout()
+    {
+        $cartArray = $this->getCartArray();
+        return view('payments/checkout',$cartArray);
     }
 }

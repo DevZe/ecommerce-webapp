@@ -148,7 +148,7 @@ hr {
 
 <div id="registerModal" class="modal">
 
-    <form class="modal-content" method="post">
+    <form class="modal-content" style="border-radius: 15px;" method="post">
       <div class="container">
         <h1>Sign Up</h1>
         <p>Please fill in this form to create an account.</p>
